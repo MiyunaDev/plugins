@@ -1,0 +1,44 @@
+{
+  "$schema": "https://specs.miyunadev.org/schemas/v1/plugin.schema.json",
+  "id": "org.miyunadev.games.retro-arcade",
+  "name": "Retro Arcade Snake",
+  "version": "1.0.0",
+  "description": "Classic 8-bit retro arcade snake mini-game with local high-score persistence.",
+  "author": {
+    "name": "Miyuna Game Studio",
+    "email": "games@miyunadev.org"
+  },
+  "license": "MIT",
+  "engines": {
+    "miyuna": ">=1.0.0",
+    "client": {
+      "web": true,
+      "android": true,
+      "ios": true
+    }
+  },
+  "artifact": {
+    "type": "web-bundle",
+    "entry": "dist/index.html"
+  },
+  "contributions": [
+    {
+      "type": "route",
+      "id": "arcade-snake-route",
+      "title": "Retro Snake Arcade",
+      "path": "/snake",
+      "icon": "assets/icon.png"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "storage.local",
+      "reason": "Persists player high scores and control settings.",
+      "quota": "2MB"
+    },
+    {
+      "name": "ui.canvas",
+      "reason": "Renders 60fps HTML5 Canvas graphics."
+    }
+  ]
+}

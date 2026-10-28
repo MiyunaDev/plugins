@@ -1,0 +1,15 @@
+{
+  "name": "@miyuna/plugin-contracts",
+  "version": "1.0.0",
+  "description": "Platform-neutral shared contracts, schemas, and lifecycle definitions for the Miyuna Universal Plugin Ecosystem",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test"
+  },
+  "keywords": ["miyuna", "plugins", "contracts", "schemas", "lifecycle"],
+  "author": "Miyuna Architecture Team",
+  "license": "MIT"
+}

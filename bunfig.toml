@@ -1,0 +1,7 @@
+[test]
+root = "."
+preload = []
+coverage = false
+
+[install]
+saveTextLockfile = true

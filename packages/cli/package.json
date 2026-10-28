@@ -1,0 +1,21 @@
+{
+  "name": "@miyuna/plugin-cli",
+  "version": "1.0.0",
+  "description": "Developer tooling, package packing, signing, and verification CLI for the Miyuna Universal Plugin Ecosystem",
+  "type": "module",
+  "bin": {
+    "miyuna-plugin": "./bin/miyuna-plugin.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "bun test tests/"
+  },
+  "dependencies": {
+    "@miyuna/plugin-contracts": "workspace:*",
+    "@miyuna/plugin-runtime": "workspace:*"
+  },
+  "author": "Miyuna Architecture Team",
+  "license": "MIT"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@miyuna/plugin-adapters",
+  "version": "1.0.0",
+  "description": "Official reference host client adapters for Glacier (Web), Kiirohana (Cordova), and Matcha (React Native)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "bun test tests/"
+  },
+  "dependencies": {
+    "@miyuna/plugin-contracts": "workspace:*",
+    "@miyuna/plugin-runtime": "workspace:*",
+    "@miyuna/plugin-ui-host": "workspace:*"
+  },
+  "author": "Miyuna Architecture Team",
+  "license": "MIT"
+}

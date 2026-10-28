@@ -1,0 +1,9 @@
+{
+  "$schema": "https://specs.miyunadev.org/schemas/v1/plugin.schema.json",
+  "id": "org.miyunadev.attack.slip",
+  "name": "Zip Slip Attack Attempt",
+  "version": "1.0.0",
+  "author": { "name": "Attacker" },
+  "engines": { "miyuna": ">=1.0.0" },
+  "artifact": { "type": "web-bundle", "entry": "../../etc/passwd" }
+}

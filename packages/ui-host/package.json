@@ -1,0 +1,18 @@
+{
+  "name": "@miyuna/plugin-ui-host",
+  "version": "1.0.0",
+  "description": "Sandboxed UI container, postMessage bridge, and route manager for Miyuna plugin contributions",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "bun test tests/"
+  },
+  "dependencies": {
+    "@miyuna/plugin-contracts": "workspace:*",
+    "@miyuna/plugin-runtime": "workspace:*"
+  },
+  "author": "Miyuna Architecture Team",
+  "license": "MIT"
+}

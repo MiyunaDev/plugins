@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@miyuna/plugin-contracts": ["packages/contracts/src/index.ts"],
+      "@miyuna/plugin-runtime": ["packages/runtime/src/index.ts"],
+      "@miyuna/plugin-ui-host": ["packages/ui-host/src/index.ts"],
+      "@miyuna/plugin-bridge": ["packages/plugin-bridge/src/index.ts"],
+      "@miyuna/plugin-cli": ["packages/cli/src/index.ts"],
+      "@miyuna/plugin-adapters": ["packages/adapters/src/index.ts"],
+      "@miyuna/plugin-conformance-tests": ["packages/conformance-tests/src/index.ts"],
+      "@miyuna/plugin-registry-service": ["services/registry/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}

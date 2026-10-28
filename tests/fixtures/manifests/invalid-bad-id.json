@@ -1,0 +1,9 @@
+{
+  "$schema": "https://specs.miyunadev.org/schemas/v1/plugin.schema.json",
+  "id": "INVALID ID WITH SPACES",
+  "name": "Invalid ID Plugin",
+  "version": "1.0.0",
+  "author": { "name": "Tester" },
+  "engines": { "miyuna": ">=1.0.0" },
+  "artifact": { "type": "web-bundle", "entry": "dist/index.html" }
+}

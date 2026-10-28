@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://specs.miyunadev.org/schemas/v1/plugin.schema.json",
+  "title": "MiyunaPluginManifest",
+  "description": "Canonical schema definition for Miyuna Universal Plugin manifests (plugin.json).",
+  "type": "object",
+  "required": [
+    "$schema",
+    "id",
+    "name",
+    "version",
+    "artifact",
+    "engines"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "URL or URI pointing to the canonical plugin manifest JSON Schema."
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique reverse-domain identifier for the plugin (e.g. org.miyunadev.jellyfin-connector).",
+      "pattern": "^[a-z0-9]+(\\.[a-z0-9_-]+)+$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable display name of the plugin.",
+      "minLength": 2,
+      "maxLength": 64
+    },
+    "version": {
+      "type": "string",
+      "description": "Strict Semantic Versioning 2.0.0 string.",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+    },
+    "description": {
+      "type": "string",
+      "description": "A concise summary of what the plugin provides.",
+      "maxLength": 512
+    },
+    "author": {
+      "type": "object",
+      "description": "Plugin author or maintainer information.",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX license identifier (e.g. MIT, Apache-2.0, GPL-3.0-or-later) or PROPRIETARY.",
+      "default": "MIT"
+    },
+    "homepage": {
+      "type": "string",
+      "format": "uri",
+      "description": "Web URL to the plugin project homepage or repository."
+    },
+    "icon": {
+      "type": "string",
+      "description": "Relative path to the plugin icon inside the archive package (PNG/SVG, recommended 256x256).",
+      "pattern": "^(?!.*\\.\\.)[a-zA-Z0-9_\\-\\./]+\\.(png|svg|webp)$"
+    },
+    "engines": {
+      "type": "object",
+      "description": "Platform and client compatibility constraints.",
+      "required": ["miyuna"],
+      "additionalProperties": false,
+      "properties": {
+        "miyuna": {
+          "type": "string",
+          "description": "Semver range for the required Miyuna host bridge version (e.g. >=1.0.0 <2.0.0)."
+        },
+        "client": {
+          "type": "object",
+          "description": "Client engine flags and minimum versions.",
+          "additionalProperties": {
+            "type": ["boolean", "string"]
+          },
+          "properties": {
+            "web": { "type": ["boolean", "string"] },
+            "android": { "type": ["boolean", "string"] },
+            "ios": { "type": ["boolean", "string"] },
+            "desktop": { "type": ["boolean", "string"] }
+          }
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "description": "Specification of the primary executable or declarative artifact bundle.",
+      "required": ["type", "entry"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "web-bundle",
+            "wasm-module",
+            "service-connector",
+            "declarative-workflow",
+            "native-adapter"
+          ],
+          "description": "The artifact type determining the sandbox execution model."
+        },
+        "entry": {
+          "type": "string",
+          "description": "Relative path within the package archive to the main entry point (no directory traversal allowed).",
+          "pattern": "^(?!.*\\.\\.)[a-zA-Z0-9_\\-\\./]+$"
+        },
+        "integrity": {
+          "type": "string",
+          "description": "Subresource integrity hash for the main entry point (e.g. sha256-...).",
+          "pattern": "^sha256-[A-Za-z0-9+/=]+$"
+        }
+      }
+    },
+    "contributions": {
+      "type": "array",
+      "description": "Declared UI and logical contribution slots requested by the plugin.",
+      "items": {
+        "type": "object",
+        "required": ["type", "id", "title"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "route",
+              "widget",
+              "menu-entry",
+              "event-listener",
+              "capability-provider"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_-]+$",
+            "description": "Identifier for the contribution, unique within this plugin."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "path": {
+            "type": "string",
+            "description": "Relative route path for 'route' contributions (e.g. /main or /settings).",
+            "pattern": "^/[a-zA-Z0-9_\\-\\./]*$"
+          },
+          "icon": {
+            "type": "string",
+            "pattern": "^(?!.*\\.\\.)[a-zA-Z0-9_\\-\\./]+\\.(png|svg|webp)$"
+          },
+          "slot": {
+            "type": "string",
+            "description": "Target UI slot for widgets or menu entries (e.g. sidebar, profile-menu, dashboard-card)."
+          },
+          "events": {
+            "type": "array",
+            "description": "List of event topic names for 'event-listener' contributions.",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9_-]+(\\.[a-z0-9_-]+)+$"
+            }
+          },
+          "providesCapability": {
+            "type": "string",
+            "description": "The capability name provided for 'capability-provider' contributions.",
+            "pattern": "^[a-z0-9_-]+(\\.[a-z0-9_-]+)+$"
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "Declared capability and permission requests required by the plugin.",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Canonical capability name identifier (e.g. storage.local, network.fetch, device.naviah-sync).",
+            "pattern": "^[a-z0-9_-]+(\\.[a-z0-9_-]+)+$"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Human-readable explanation of why the plugin requires this capability.",
+            "maxLength": 256
+          },
+          "quota": {
+            "type": "string",
+            "description": "Quota limit for storage or resource capabilities (e.g. 10MB, 50MB).",
+            "pattern": "^[1-9][0-9]*(KB|MB|GB)$"
+          },
+          "domains": {
+            "type": "array",
+            "description": "Destination domain whitelist for network.fetch capabilities.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "operations": {
+            "type": "array",
+            "description": "Granular operation names permitted for compound capabilities.",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "description": "Peer plugin dependencies required by this plugin, mapped from plugin ID to semver range.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+}

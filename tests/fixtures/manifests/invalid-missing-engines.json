@@ -1,0 +1,8 @@
+{
+  "$schema": "https://specs.miyunadev.org/schemas/v1/plugin.schema.json",
+  "id": "org.miyunadev.missing.engines",
+  "name": "Missing Engines Plugin",
+  "version": "1.0.0",
+  "author": { "name": "Tester" },
+  "artifact": { "type": "web-bundle", "entry": "dist/index.html" }
+}

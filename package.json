@@ -1,0 +1,35 @@
+{
+  "name": "@miyuna/plugins",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Universal Plugin Ecosystem for the Miyuna Platform across Web, Mobile, and Desktop clients",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "build": "bun run build:contracts && bun run build:runtime && bun run build:ui-host && bun run build:bridge && bun run build:cli && bun run build:adapters && bun run build:conformance && bun run build:registry",
+    "build:contracts": "bun build --target=node packages/contracts/src/index.ts --outdir packages/contracts/dist",
+    "build:runtime": "bun build --target=node packages/runtime/src/index.ts --outdir packages/runtime/dist",
+    "build:ui-host": "bun build --target=node packages/ui-host/src/index.ts --outdir packages/ui-host/dist",
+    "build:bridge": "bun build packages/plugin-bridge/src/index.ts --outdir packages/plugin-bridge/dist --minify",
+    "build:cli": "bun build --target=node packages/cli/src/index.ts --outdir packages/cli/dist",
+    "build:adapters": "bun build --target=node packages/adapters/src/index.ts --outdir packages/adapters/dist",
+    "build:conformance": "bun build --target=node packages/conformance-tests/src/index.ts --outdir packages/conformance-tests/dist",
+    "build:registry": "bun build --target=node services/registry/src/index.ts --outdir services/registry/dist",
+    "test": "bun test packages/ services/ tests/",
+    "dev:registry": "bun run services/registry/src/index.ts",
+    "cli": "bun run packages/cli/bin/miyuna-plugin.js"
+  },
+  "keywords": [
+    "miyuna",
+    "plugins",
+    "universal-plugins",
+    "sandboxing",
+    "capability-broker",
+    "extensibility"
+  ],
+  "author": "Miyuna Architecture Team",
+  "license": "MIT"
+}

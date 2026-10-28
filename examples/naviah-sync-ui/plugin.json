@@ -1,0 +1,45 @@
+{
+  "$schema": "https://specs.miyunadev.org/schemas/v1/plugin.schema.json",
+  "id": "org.miyunadev.plugins.naviah-sync-ui",
+  "name": "Naviah Device Sync Dashboard",
+  "version": "1.0.0",
+  "description": "Monitors and coordinates peer-to-peer library synchronization via the Naviah Sync engine.",
+  "author": {
+    "name": "Miyuna Device Team",
+    "email": "sync@miyunadev.org"
+  },
+  "license": "MIT",
+  "engines": {
+    "miyuna": ">=1.0.0",
+    "client": {
+      "web": true,
+      "android": true,
+      "ios": true
+    }
+  },
+  "artifact": {
+    "type": "web-bundle",
+    "entry": "dist/index.html"
+  },
+  "contributions": [
+    {
+      "type": "route",
+      "id": "naviah-sync-route",
+      "title": "Naviah Device Sync",
+      "path": "/sync",
+      "icon": "assets/icon.png"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "device.naviah-sync",
+      "reason": "Discovers nearby paired devices and synchronizes library state.",
+      "operations": ["getSyncStatus", "discoverPeers", "startSync", "cancelSync"]
+    },
+    {
+      "name": "storage.local",
+      "reason": "Stores preferred sync peers and history settings.",
+      "quota": "5MB"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@miyuna/plugin-bridge",
+  "version": "1.0.0",
+  "description": "Zero-dependency lightweight TypeScript/JavaScript client SDK for Miyuna plugin authors",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "bun test tests/"
+  },
+  "keywords": ["miyuna", "plugin", "sdk", "bridge", "client"],
+  "author": "Miyuna Architecture Team",
+  "license": "MIT"
+}

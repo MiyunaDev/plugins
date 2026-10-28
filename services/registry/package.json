@@ -1,0 +1,20 @@
+{
+  "name": "@miyuna/plugin-registry-service",
+  "version": "1.0.0",
+  "description": "Standalone reference registry service and package distribution server for Miyuna plugins",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "start": "bun run src/server.ts",
+    "build": "tsc",
+    "test": "bun test tests/"
+  },
+  "dependencies": {
+    "@miyuna/plugin-contracts": "workspace:*",
+    "@miyuna/plugin-runtime": "workspace:*",
+    "@miyuna/plugin-cli": "workspace:*"
+  },
+  "author": "Miyuna Architecture Team",
+  "license": "MIT"
+}

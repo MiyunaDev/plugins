@@ -1,0 +1,625 @@
+openapi: 3.1.0
+info:
+  title: Miyuna Plugin Registry API
+  version: 1.0.0
+  description: >
+    Decoupled REST API specification for the Miyuna Universal Plugin Registry.
+    Provides catalog discovery, client engine semver compatibility filtering,
+    package metadata retrieval, signed package downloads, and publisher release ingestion.
+  contact:
+    name: Miyuna Architecture Team
+    url: https://github.com/miyuna-project
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: /v1
+    description: Relative API v1 endpoint
+  - url: https://registry.miyunadev.org/api/v1
+    description: Official Public Registry Production
+
+tags:
+  - name: Discovery
+    description: Plugin catalog discovery and compatibility filtering
+  - name: Package
+    description: Metadata retrieval and signed .mpk package downloads
+  - name: Publishing
+    description: Publisher package attestation, verification, and ingestion
+  - name: Health
+    description: System health and operational telemetry
+
+paths:
+  /health:
+    get:
+      summary: Service health check
+      description: Returns service availability status and metadata
+      operationId: getHealth
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+
+  /plugins:
+    get:
+      summary: Search and browse plugins
+      description: >
+        Returns a paginated list of plugins matching search keywords, categories,
+        and host client engine compatibility constraints.
+      operationId: listPlugins
+      tags:
+        - Discovery
+      parameters:
+        - name: query
+          in: query
+          description: Search term matching plugin id, name, or description
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Filter by primary contribution category
+          required: false
+          schema:
+            type: string
+            enum: [game, media, tool, sync, theme, generic]
+        - name: tag
+          in: query
+          description: Filter by manifest keyword/tag
+          required: false
+          schema:
+            type: string
+        - name: client_engine
+          in: query
+          description: Host client technology identifier for semver compatibility filtering
+          required: false
+          schema:
+            type: string
+            enum: [web, android, ios, desktop]
+        - name: client_version
+          in: query
+          description: Host client semver (e.g. 1.2.0)
+          required: false
+          schema:
+            type: string
+            pattern: '^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$'
+        - name: miyuna_version
+          in: query
+          description: Host core platform semver
+          required: false
+          schema:
+            type: string
+            pattern: '^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$'
+        - name: page
+          in: query
+          description: Page number (1-based index)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Maximum items per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Paginated list of plugins
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PluginListResponse'
+        '400':
+          description: Invalid query parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /plugins/{id}:
+    get:
+      summary: Retrieve plugin details
+      description: Returns complete plugin metadata, available versions, and download URLs.
+      operationId: getPluginById
+      tags:
+        - Discovery
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Reverse-DNS plugin identifier (e.g. org.miyunadev.minigame)
+          schema:
+            type: string
+            pattern: '^[a-z0-9]+(\.[a-z0-9_-]+)+$'
+        - name: client_engine
+          in: query
+          description: Host client technology to resolve latest compatible version
+          required: false
+          schema:
+            type: string
+        - name: client_version
+          in: query
+          description: Host client semver
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Plugin found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PluginDetail'
+        '404':
+          description: Plugin not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /plugins/{id}/versions/{version}:
+    get:
+      summary: Retrieve specific plugin version
+      description: Returns release metadata, manifest, package integrity digest, and signature.
+      operationId: getPluginVersion
+      tags:
+        - Package
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Plugin ID
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          description: Semver version string (e.g. 1.0.0)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Version metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PluginVersionDetail'
+        '404':
+          description: Version not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /plugins/{id}/versions/{version}/download:
+    get:
+      summary: Download plugin package archive
+      description: Streams the signed `.mpk` archive binary with integrity verification headers.
+      operationId: downloadPluginPackage
+      tags:
+        - Package
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Plugin ID
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          description: Semver version string
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Plugin package ZIP/.mpk archive stream
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: 'attachment; filename="org.miyunadev.minigame-1.0.0.mpk"'
+            X-Package-SHA256:
+              description: SHA-256 hash of the entire .mpk archive
+              schema:
+                type: string
+            X-Package-Signature:
+              description: Hex-encoded Ed25519 signature of the package checksums
+              schema:
+                type: string
+          content:
+            application/vnd.miyuna.plugin+zip:
+              schema:
+                type: string
+                format: binary
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Package archive not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /plugins/publish:
+    post:
+      summary: Publish a new plugin version
+      description: >
+        Uploads and validates a signed `.mpk` plugin archive. The registry parses
+        `plugin.json`, validates package checksums, verifies publisher Ed25519 signature,
+        and registers the immutable release version.
+      operationId: publishPlugin
+      tags:
+        - Publishing
+      security:
+        - PublisherToken: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - package
+              properties:
+                package:
+                  type: string
+                  format: binary
+                  description: The .mpk archive file
+                signature:
+                  type: string
+                  description: Optional detached Ed25519 signature (if not embedded as signature.sig)
+                publicKey:
+                  type: string
+                  description: Hex or PEM encoded publisher Ed25519 public key
+          application/json:
+            schema:
+              type: object
+              required:
+                - packageBase64
+              properties:
+                packageBase64:
+                  type: string
+                  description: Base64-encoded .mpk binary archive
+                signature:
+                  type: string
+                  description: Optional detached signature
+                publicKey:
+                  type: string
+                  description: Hex or PEM encoded publisher public key
+      responses:
+        '201':
+          description: Plugin version successfully published and verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishSuccessResponse'
+        '400':
+          description: Validation failure (malformed manifest, checksum mismatch, or Zip Slip attack)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid Ed25519 publisher signature
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Plugin version already exists (releases are immutable)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    PublisherToken:
+      type: http
+      scheme: bearer
+      description: Optional publisher authorization token
+
+  schemas:
+    HealthStatus:
+      type: object
+      required:
+        - status
+        - version
+        - uptime
+      properties:
+        status:
+          type: string
+          example: 'ok'
+        version:
+          type: string
+          example: '1.0.0'
+        uptime:
+          type: number
+          description: Service uptime in seconds
+          example: 3600.5
+        timestamp:
+          type: string
+          format: date-time
+
+    PaginationMeta:
+      type: object
+      required:
+        - total
+        - page
+        - limit
+        - totalPages
+      properties:
+        total:
+          type: integer
+          example: 42
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 20
+        totalPages:
+          type: integer
+          example: 3
+
+    PluginSummary:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - latestVersion
+        - author
+      properties:
+        id:
+          type: string
+          example: 'org.miyunadev.minigame'
+        name:
+          type: string
+          example: 'Mini Game Demo'
+        description:
+          type: string
+          example: 'Retro canvas mini-game plugin for Miyuna'
+        category:
+          type: string
+          example: 'game'
+        tags:
+          type: array
+          items:
+            type: string
+          example: ['game', 'canvas', 'retro']
+        author:
+          type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+              example: 'Miyuna Team'
+            email:
+              type: string
+            url:
+              type: string
+        latestVersion:
+          type: string
+          example: '1.0.0'
+        latestCompatibleVersion:
+          type: string
+          nullable: true
+          description: Latest version compatible with the requested client_engine/version
+          example: '1.0.0'
+        downloads:
+          type: integer
+          example: 1250
+        verifiedPublisher:
+          type: boolean
+          example: true
+        updatedAt:
+          type: string
+          format: date-time
+
+    PluginListResponse:
+      type: object
+      required:
+        - items
+        - pagination
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PluginSummary'
+        pagination:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    PluginVersionRecord:
+      type: object
+      required:
+        - version
+        - publishedAt
+        - downloadUrl
+        - sha256
+      properties:
+        version:
+          type: string
+          example: '1.0.0'
+        publishedAt:
+          type: string
+          format: date-time
+        downloadUrl:
+          type: string
+          format: uri
+          example: '/v1/plugins/org.miyunadev.minigame/versions/1.0.0/download'
+        sha256:
+          type: string
+          example: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+        signature:
+          type: string
+          nullable: true
+        downloadCount:
+          type: integer
+          example: 350
+        engines:
+          type: object
+
+    PluginDetail:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - author
+        - latestVersion
+        - versions
+      properties:
+        id:
+          type: string
+          example: 'org.miyunadev.minigame'
+        name:
+          type: string
+          example: 'Mini Game Demo'
+        description:
+          type: string
+          example: 'Retro canvas mini-game plugin for Miyuna'
+        category:
+          type: string
+          example: 'game'
+        tags:
+          type: array
+          items:
+            type: string
+        author:
+          type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            url:
+              type: string
+        repository:
+          type: string
+          format: uri
+          example: 'https://github.com/miyuna-project/plugins'
+        latestVersion:
+          type: string
+          example: '1.0.0'
+        latestCompatibleVersion:
+          type: string
+          nullable: true
+          example: '1.0.0'
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PluginVersionRecord'
+        downloads:
+          type: integer
+          example: 1250
+        verifiedPublisher:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    PluginVersionDetail:
+      type: object
+      required:
+        - id
+        - version
+        - manifest
+        - downloadUrl
+        - sha256
+        - publishedAt
+      properties:
+        id:
+          type: string
+          example: 'org.miyunadev.minigame'
+        version:
+          type: string
+          example: '1.0.0'
+        manifest:
+          type: object
+          description: Full plugin.json content
+        downloadUrl:
+          type: string
+          format: uri
+        sha256:
+          type: string
+        signature:
+          type: string
+          nullable: true
+        publisherKey:
+          type: string
+          nullable: true
+        publishedAt:
+          type: string
+          format: date-time
+        downloadCount:
+          type: integer
+
+    PublishSuccessResponse:
+      type: object
+      required:
+        - success
+        - id
+        - version
+        - downloadUrl
+        - sha256
+      properties:
+        success:
+          type: boolean
+          example: true
+        id:
+          type: string
+          example: 'org.miyunadev.minigame'
+        version:
+          type: string
+          example: '1.0.0'
+        downloadUrl:
+          type: string
+          example: '/v1/plugins/org.miyunadev.minigame/versions/1.0.0/download'
+        sha256:
+          type: string
+          example: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+        verifiedSignature:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: 'Plugin version 1.0.0 published successfully'
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          example: 'VALIDATION_ERROR'
+        message:
+          type: string
+          example: 'Package manifest is missing required fields'
+        details:
+          type: array
+          items:
+            type: string
+          nullable: true

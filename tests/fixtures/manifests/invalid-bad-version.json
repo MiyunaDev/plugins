@@ -1,0 +1,9 @@
+{
+  "$schema": "https://specs.miyunadev.org/schemas/v1/plugin.schema.json",
+  "id": "org.miyunadev.bad.version",
+  "name": "Invalid Version Plugin",
+  "version": "v1.0-not-semver",
+  "author": { "name": "Tester" },
+  "engines": { "miyuna": ">=1.0.0" },
+  "artifact": { "type": "web-bundle", "entry": "dist/index.html" }
+}

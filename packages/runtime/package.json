@@ -1,0 +1,17 @@
+{
+  "name": "@miyuna/plugin-runtime",
+  "version": "1.0.0",
+  "description": "Minimal plugin runtime, package installer, capability broker, and local plugin manager for Miyuna clients",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "bun test tests/"
+  },
+  "dependencies": {
+    "@miyuna/plugin-contracts": "workspace:*"
+  },
+  "author": "Miyuna Architecture Team",
+  "license": "MIT"
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://specs.miyunadev.org/schemas/v1/plugin.schema.json",
+  "id": "org.miyunadev.plugins.jellyfin-connector",
+  "name": "Jellyfin Media Connector",
+  "version": "1.0.0",
+  "description": "Stream media from a personal self-hosted Jellyfin server directly inside Miyuna clients.",
+  "author": {
+    "name": "Miyuna Media Team",
+    "email": "media@miyunadev.org"
+  },
+  "license": "MIT",
+  "engines": {
+    "miyuna": ">=1.0.0",
+    "client": {
+      "web": true,
+      "android": true,
+      "ios": true
+    }
+  },
+  "artifact": {
+    "type": "web-bundle",
+    "entry": "dist/index.html"
+  },
+  "contributions": [
+    {
+      "type": "route",
+      "id": "jellyfin-library",
+      "title": "Jellyfin Media",
+      "path": "/library",
+      "icon": "assets/icon.png"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "network.fetch",
+      "reason": "Communicates with self-hosted Jellyfin REST APIs.",
+      "domains": ["*"]
+    },
+    {
+      "name": "auth.secureKeyring",
+      "reason": "Securely stores user Jellyfin auth token in host keystore."
+    },
+    {
+      "name": "storage.local",
+      "reason": "Stores user server URL and playback state.",
+      "quota": "5MB"
+    }
+  ]
+}

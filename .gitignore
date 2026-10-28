@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Compiled build outputs
+dist/
+*.tsbuildinfo
+
+# Test and coverage artifacts
+coverage/
+*.lcov
+temp-*/
+*.tmp
+*.log
+
+# Generated test archives and local registry data
+data/
+*.mpk
+!examples/**/*.mpk
+
+# Environment & local settings
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
