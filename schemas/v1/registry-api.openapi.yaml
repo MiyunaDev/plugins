@@ -8,7 +8,7 @@ info:
     package metadata retrieval, signed package downloads, and publisher release ingestion.
   contact:
     name: Miyuna Architecture Team
-    url: https://github.com/miyuna-project
+    url: https://github.com/miyunadev
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -514,7 +514,7 @@ components:
         repository:
           type: string
           format: uri
-          example: 'https://github.com/miyuna-project/plugins'
+          example: 'https://github.com/miyunadev/plugins'
         latestVersion:
           type: string
           example: '1.0.0'

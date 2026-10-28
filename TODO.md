@@ -23,7 +23,7 @@ This document tracks all engineering tasks across the implementation lifecycle o
 - [x] **ARCH-001**: Inspect repository structure and document multi-client constraints
   - **Objective**: Analyze existing client projects (`Glacier`, `Hanatsuki`, `Kiirohana`, `Matcha`, `Cactus`) and core microservices (`Partisier-Rewritten`) to establish architecture baseline.
   - **Actions**:
-    1. Inspect directory layout, technology stacks, and package files across `apps/` and `extensions/`.
+    1. Inspect directory layout, technology stacks, and package files across client repositories and the plugins ecosystem.
     2. Confirm separation between core platform services and optional extensions.
     3. Document findings in initial architectural overview.
   - **Acceptance Criteria**: Verified facts documented without false claims of implementation; directory boundaries established.
@@ -306,12 +306,12 @@ This document tracks all engineering tasks across the implementation lifecycle o
 - [x] **SDK-002**: Implement Glacier (React/Vite Web) official host adapter
   - **Objective**: Integrate the plugin runtime into the primary web client.
   - **Actions**:
-    1. Add plugin manager and UI host components into `apps/open-source/client/Glacier`.
+    1. Implement Glacier host adapter in `@miyuna/plugin-adapters` and export for web client consumption.
     2. Wire plugin navigation into Glacier's AppLayout.
     3. Test running the mini-game demo inside Glacier.
   - **Acceptance Criteria**: Mini-game runs smoothly inside Glacier web app without console errors or styling leaks.
   - **Dependencies**: UI-002, SDK-001, UI-003.
-  - **Relevant Files**: [`apps/open-source/client/Glacier/src/plugins/`](file:///c:/Users/Ananda/Documents/Coding/Miyuna/apps/open-source/client/Glacier/src/plugins/).
+  - **Relevant Files**: [`plugins/packages/adapters/src/GlacierPluginHost.ts`](file:///c:/Users/Ananda/Documents/Coding/Miyuna/plugins/packages/adapters/src/GlacierPluginHost.ts).
   - **Priority**: `P1`
   - **Status**: `DONE`
 
@@ -322,7 +322,7 @@ This document tracks all engineering tasks across the implementation lifecycle o
     2. Ensure sandboxed WebView configuration respects Android file-access restrictions.
   - **Acceptance Criteria**: Demo plugins load on Android emulator via Cordova without file access security violations.
   - **Dependencies**: SDK-002.
-  - **Relevant Files**: [`apps/open-source/client/Kiirohana/src/plugins/`](file:///c:/Users/Ananda/Documents/Coding/Miyuna/apps/open-source/client/Kiirohana/src/plugins/).
+  - **Relevant Files**: [`plugins/packages/adapters/src/KiirohanaPluginHost.ts`](file:///c:/Users/Ananda/Documents/Coding/Miyuna/plugins/packages/adapters/src/KiirohanaPluginHost.ts).
   - **Priority**: `P2`
   - **Status**: `DONE`
 
@@ -333,7 +333,7 @@ This document tracks all engineering tasks across the implementation lifecycle o
     2. Map React Native native secure store to broker credential provider.
   - **Acceptance Criteria**: Demo plugin renders and executes inside Matcha RN application.
   - **Dependencies**: SDK-002.
-  - **Relevant Files**: [`apps/open-source/client/Matcha/src/plugins/`](file:///c:/Users/Ananda/Documents/Coding/Miyuna/apps/open-source/client/Matcha/src/plugins/).
+  - **Relevant Files**: [`plugins/packages/adapters/src/MatchaPluginHost.ts`](file:///c:/Users/Ananda/Documents/Coding/Miyuna/plugins/packages/adapters/src/MatchaPluginHost.ts).
   - **Priority**: `P2`
   - **Status**: `DONE`
 

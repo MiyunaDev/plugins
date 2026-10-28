@@ -23,7 +23,7 @@ describe('Official Reference Host Adapters (@miyuna/plugin-adapters)', () => {
       {
         path: 'plugin.json',
         content: JSON.stringify({
-          id: 'org.miyuna.adaptertest',
+          id: 'org.miyunadev.adaptertest',
           name: 'Adapter Test Plugin',
           version: '1.0.0',
           engines: { miyuna: '>=1.0.0' },
@@ -42,16 +42,16 @@ describe('Official Reference Host Adapters (@miyuna/plugin-adapters)', () => {
     const pkg = createTestPlugin();
 
     const installed = await glacier.manager.install(pkg);
-    expect(installed.pluginId).toBe('org.miyuna.adaptertest');
+    expect(installed.pluginId).toBe('org.miyunadev.adaptertest');
 
-    await glacier.activatePlugin('org.miyuna.adaptertest');
-    expect(glacier.manager.getPlugin('org.miyuna.adaptertest')?.state).toBe('ACTIVE');
+    await glacier.activatePlugin('org.miyunadev.adaptertest');
+    expect(glacier.manager.getPlugin('org.miyunadev.adaptertest')?.state).toBe('ACTIVE');
 
-    const route = glacier.router.resolveRoute('/ext/org.miyuna.adaptertest/main');
+    const route = glacier.router.resolveRoute('/ext/org.miyunadev.adaptertest/main');
     expect(route?.contributionId).toBe('main');
 
-    await glacier.deactivatePlugin('org.miyuna.adaptertest');
-    expect(glacier.manager.getPlugin('org.miyuna.adaptertest')?.state).toBe('INACTIVE');
+    await glacier.deactivatePlugin('org.miyunadev.adaptertest');
+    expect(glacier.manager.getPlugin('org.miyunadev.adaptertest')?.state).toBe('INACTIVE');
   });
 
   it('initializes Kiirohana Cordova host adapter and enforces security settings', async () => {
@@ -61,15 +61,15 @@ describe('Official Reference Host Adapters (@miyuna/plugin-adapters)', () => {
 
     const pkg = createTestPlugin();
     await kiirohana.manager.install(pkg);
-    await kiirohana.activatePlugin('org.miyuna.adaptertest');
-    expect(kiirohana.manager.getPlugin('org.miyuna.adaptertest')?.state).toBe('ACTIVE');
+    await kiirohana.activatePlugin('org.miyunadev.adaptertest');
+    expect(kiirohana.manager.getPlugin('org.miyunadev.adaptertest')?.state).toBe('ACTIVE');
   });
 
   it('initializes Matcha React Native host adapter and handles webview bridge RPC', async () => {
     const matcha = new MatchaPluginHost({ baseInstallDir: join(tempDir, 'matcha') });
     const pkg = createTestPlugin();
     await matcha.manager.install(pkg);
-    await matcha.activatePlugin('org.miyuna.adaptertest');
+    await matcha.activatePlugin('org.miyunadev.adaptertest');
 
     const postedMessages: string[] = [];
     const mockWebView = {
@@ -83,7 +83,7 @@ describe('Official Reference Host Adapters (@miyuna/plugin-adapters)', () => {
       params: {},
     });
 
-    await matcha.handleWebViewMessage('org.miyuna.adaptertest', rpcReq, mockWebView);
+    await matcha.handleWebViewMessage('org.miyunadev.adaptertest', rpcReq, mockWebView);
     expect(postedMessages).toHaveLength(1);
 
     const res = JSON.parse(postedMessages[0]);

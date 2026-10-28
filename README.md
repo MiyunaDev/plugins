@@ -15,11 +15,11 @@ The **Universal Plugin Ecosystem** provides a secure, modular, technology-neutra
 ## 2. Problem Statement
 
 The platform operates across multiple official client applications implemented with distinct technology stacks:
-- **Glacier**: Modern Web client ([React](file:///c:/Users/Ananda/Documents/Coding/Miyuna/apps/open-source/client/Glacier/package.json), Vite, TypeScript)
-- **Hanatsuki**: Desktop / Web client ([React](file:///c:/Users/Ananda/Documents/Coding/Miyuna/apps/open-source/client/Hanatsuki/package.json), Vite, TypeScript)
-- **Kiirohana**: Hybrid mobile client ([Apache Cordova](file:///c:/Users/Ananda/Documents/Coding/Miyuna/apps/open-source/client/Kiirohana/package.json), Vite)
-- **Matcha**: Mobile client ([React Native / Expo](file:///c:/Users/Ananda/Documents/Coding/Miyuna/apps/open-source/client/Matcha/package.json))
-- **Cactus**: Native / upcoming client platform
+- **Glacier**: Modern Web client (React 19, Vite, TypeScript)
+- **Hanatsuki**: Desktop / Web client (React, Vite, TypeScript)
+- **Kiirohana**: Hybrid mobile client (Apache Cordova, Vite, TypeScript)
+- **Matcha**: Mobile client (React Native / Expo, TypeScript)
+- **Cactus**: Native Android client (Kotlin / Android SDK)
 
 Historically, extensions risk tight coupling to a specific frontend framework or client runtime, resulting in fragmented feature availability, duplicated extension codebases, or security risks where plugins execute with excessive host privileges. The platform requires a unified contract layer so plugins can be written once, distributed safely, and hosted consistently across all official clients.
 
@@ -72,13 +72,13 @@ The boundary between mandatory core capabilities and optional extensions is stri
 
 The ecosystem targets the platform's multi-client architecture through technology-neutral contracts:
 
-| Client Name | Directory Path | Stack / Runtime | Primary Extension Host Model |
+| Client Name | Client Repository / Target Runtime | Stack / Runtime | Primary Extension Host Model |
 |---|---|---|---|
-| **Glacier** | [`apps/open-source/client/Glacier`](file:///c:/Users/Ananda/Documents/Coding/Miyuna/apps/open-source/client/Glacier) | React 19, Vite, TypeScript | Sandboxed `<iframe>`, `postMessage` Bridge |
-| **Hanatsuki** | [`apps/open-source/client/Hanatsuki`](file:///c:/Users/Ananda/Documents/Coding/Miyuna/apps/open-source/client/Hanatsuki) | React, Vite, TypeScript | Sandboxed `<iframe>`, `postMessage` Bridge |
-| **Kiirohana** | [`apps/open-source/client/Kiirohana`](file:///c:/Users/Ananda/Documents/Coding/Miyuna/apps/open-source/client/Kiirohana) | Apache Cordova, Vite, TypeScript | Isolated WebView / Cordova Bridge |
-| **Matcha** | [`apps/open-source/client/Matcha`](file:///c:/Users/Ananda/Documents/Coding/Miyuna/apps/open-source/client/Matcha) | React Native, Expo | Sandboxed `react-native-webview` Bridge |
-| **Cactus** | [`apps/open-source/client/Cactus`](file:///c:/Users/Ananda/Documents/Coding/Miyuna/apps/open-source/client/Cactus) | Native / Kotlin / Upcoming | Platform-native headless / WebView container |
+| **Glacier** | Web Client (`@miyuna/plugin-adapters`) | React 19, Vite, TypeScript | Sandboxed `<iframe>`, `postMessage` Bridge |
+| **Hanatsuki** | Desktop / Web Client | React, Vite, TypeScript | Sandboxed `<iframe>`, `postMessage` Bridge |
+| **Kiirohana** | Cordova Client (`@miyuna/plugin-adapters`) | Apache Cordova, Vite, TypeScript | Isolated WebView / Cordova Bridge |
+| **Matcha** | Mobile Client (`@miyuna/plugin-adapters`) | React Native, Expo | Sandboxed `react-native-webview` Bridge |
+| **Cactus** | Native Android Client | Native / Kotlin / Upcoming | Platform-native headless / WebView container |
 
 ---
 

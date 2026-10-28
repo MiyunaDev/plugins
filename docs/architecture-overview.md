@@ -47,7 +47,7 @@ The ecosystem enforces an inviolable separation between **Mandatory Core Platfor
 
 | Aspect | Mandatory Core Platform | Optional Plugin System |
 |---|---|---|
-| **Ownership** | Core engineering team; `apps/official/system/Partisier-Rewritten` | Community, third-party publishers, or ecosystem team |
+| **Ownership** | Core engineering team; `Partisier-Rewritten` core microservices | Community, third-party publishers, or ecosystem team |
 | **Services** | Auth, user profiles, community chat, media catalog, shorts, notifications | Mini-games, Jellyfin/Plex connectors, Naviah Sync, custom dashboard widgets |
 | **Failure Impact** | System outage if down | Graceful degradation; only affected plugin is disabled |
 | **Modification** | Governed by platform release cycles | Installed, updated, or removed independently at runtime |
